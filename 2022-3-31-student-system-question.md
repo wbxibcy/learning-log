@@ -22,3 +22,21 @@
 不用写死，例如：`filename = "student-system.json"`
 可以直接放在在命令行里，例如：`python student-system.py student-system.json`
 使py文件可以作为一个操作系统的命令使用
+
+
+## 模块化遇到的问题
+1. 模块无法被调用
+`module object is not callable`
+- 可能原因：
+文件名和函数名相同，导致无法识别
+这个时候就可以运用别名
+例如：
+`from menu import menu as m`
+
+2. 遗留问题：
+调用一次，但是却运行两遍？
+
+
+
+3. 模块导入问题
+`ImportError: cannot import name 'choose' from partially initialized module 'choose' (most likely due to a circular import) (C:\Users\sunw\work\py-practice\choose.py)`
