@@ -35,8 +35,12 @@
 
 2. 遗留问题：
 调用一次，但是却运行两遍？
+- 可能原因：函数名和文件名相同，调用时，作为模块运行一次，作为函数运行一次
+- 解决方法：在主函数中运用`if __name__ == 'main':`函数
 
 
 
 3. 模块导入问题
 `ImportError: cannot import name 'choose' from partially initialized module 'choose' (most likely due to a circular import) (C:\Users\sunw\work\py-practice\choose.py)`
+- 问题描述：因为循环调用的原因
+- 解决办法：删删掉好了
