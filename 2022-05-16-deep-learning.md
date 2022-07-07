@@ -242,8 +242,8 @@ batch < epoch
 
 ## 丢弃法
 
-将输出项随机置0来控制模型的复杂度
-一般用于神经网络的隐藏层
+将输出项随机置`0`来控制模型的复杂度
+一般用于神经网络的**隐藏层**
 丢弃的概率是模型的一个超参数
 
 ## 数值稳定性
@@ -302,3 +302,110 @@ batch < epoch
 ### 总结
 合理的权重初始值和激活函数的选取可以提升数值稳定性，可以有效的防止梯度消失和梯度爆炸
 
+#### pip 安装 换源
+```yaml
+ 阿里源：https://mirrors.aliyun.com/pypi/simple/
+ 清华源：https://pypi.tuna.tsinghua.edu.cn/simple/
+ 豆瓣：http://pypi.douban.com/simple/
+ 中科大： https://pypi.mirrors.ustc.edu.cn/simple/
+```
+示例:`pip install autogluon -i https://mirrors.aliyun.com/pypi/simple/`
+
+## 层和块
+
+### 层:
+例如，`softmax回归`是一个单层，但是它也是一个模型，所以，单个层也可以是一个模型(较简单罢了)
+
+### 块
+块（block）可以描述单个层、由多个层组成的组件或整个模型本身。
+块可以认为是层的组合体
+
+#### 小结
+- 一个`块`可以由许多`层`组成；一个`块`可以由许多`块`组成。
+- `块`可以包含代码。
+- `块`负责大量的内部处理，包括参数初始化和反向传播。
+- `层`和`块`的顺序连接由`Sequential`块处理。
+
+#### python 里的super().__init__()
+继承父类的init的方法
+
+### 关于Sequential
+其实可以认为是个python的列表
+例如：
+```yaml
+net = nn.Sequential(nn.Linear(4, 8), nn.ReLU(), nn.Linear(8, 1))
+X = torch.rand(size=(2, 4))
+print(net[2].state_dict())
+```
+结果：
+`OrderedDict([('weight', tensor([[ 0.0425,  0.2304, -0.0954, -0.2109, -0.0345, -0.0479,  0.3346, -0.1201]])), ('bias', tensor([-0.1229]))])`
+(结果不是唯一的，因为，X是个随机数)
+
+解析：
+`net(2)`是`nn.Linear(8, 1)`，看结果就可以知道，结果为一个`tensor`,而`state_dict`是一个状态字典，对于线性回归来讲,
+它的状态字典就是权重(Weight)和偏移(bias)。
+
+#### applyh函数(pandas中的灵活，但是有用的函数)
+举个例子:
+```yaml
+# 对列进行操作(对行进行操作也是类似的)
+data=np.arange(0,16).reshape(4,4)
+data=pd.DataFrame(data,columns=['0','1','2','3'])
+def f(x):
+    return x-1
+print(data)
+print(data.ix[:,['1','2']].apply(f))
+# 结果
+    0   1   2   3
+0   0   1   2   3
+1   4   5   6   7
+2   8   9  10  11
+3  12  13  14  15
+    1   2
+0   0   1
+1   4   5
+2   8   9
+3  12  13
+```
+
+### 查看层
+```yaml
+# 查看第一个全连接层
+print(*[(name, param.shape) for name, param in net[0].named_parameters()])
+
+# 查看所有的全连接层
+print(*[(name, param.shape) for name, param in net.named_parameters()])
+
+```
+注意：
+`*号`是`解包`操作
+背后原理：
+先用`[]`运算符将他变成`list`，再运用`*号`来进行`解包`操作
+
+### 保存和加载向量(并不是只有向量可以保存和下载，张量或者是字典都可以)
+- 保存
+  torch.save()这个函数
+  例子:
+  ```yaml
+  x = torch.arange(4)
+  torch.save(x, 'x-file')
+  ```
+- 下载
+  torch.load()这个函数
+  例子：
+  ```yaml
+  x2 = torch.load('x-file')
+  ```
+
+### 保存模型
+保存模型其实不是将模型的定义给保存下来，其实是将一个模型的参数给保存下来，
+以MLP为例子，可以将参数保存下来，接着，想要使用的话，
+就可以将模型先实例化，然后将参数下载下来就好。
+注意:
+保存还是使用`torch.save()`
+但是下载就要使用`torch.load_state_dict`
+
+### 小结
+`save`和`load`函数可用于**张量**对象的文件读写。
+我们可以通过`参数字典`保存和`加载网络`的全部参数。
+保存架构必须在代码中完成，而不是在参数中完成。
