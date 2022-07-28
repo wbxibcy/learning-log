@@ -68,7 +68,7 @@ proxy_servers:
 
 ### 如果没有在配好的环境中
 1. 在终端中输入`conda activate data`
-接下来操作如上
+2. 接下来操作如上
 
 #### tip:可用tab键补全
 
@@ -78,6 +78,7 @@ proxy_servers:
 2. 在那个里面创建环境
 3. 敲入`code .`
 4. 打开VScode以后，不出意外，右下角的环境为新建立的，如果不是，那就是出意外了
+
 
 ### 关于conda activate 
 - 把`C:\Anaconda\envs\py3`加入到`path`
