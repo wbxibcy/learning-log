@@ -80,4 +80,4 @@ proxy_servers:
 4. 打开VScode以后，不出意外，右下角的环境为新建立的，如果不是，那就是出意外了
 
 ### 关于conda activate 
- 把`C:\Anaconda\envs\py3`加入到`path`
+- 把`C:\Anaconda\envs\py3`加入到`path`
